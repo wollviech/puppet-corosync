@@ -1,0 +1,37 @@
+- Written by Wolfgang Miedl <wmiedl@zid.tuwien.ac.at>
+
+= Description
+
+Configures Corosync, a part of the Pacemaker or Red Hat Cluster stacks. See corosync::corosync
+for main-class configuration
+
+= License
+
+This work is licensed under the Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) 
+license. A full copy of the license terms can be found in the file LICENSE.
+
+By using, modifying or redistributing this work you agree to be bound by the 
+license terms. 
+
+= Example
+
+class {'corosync':
+	rrp_mode => 'active',
+	secauth => 'on',
+	secauth_key > '<base64-encoded secauth key>',
+}
+
+corosync::interface{'production':
+	member => [ '10.10.10.10', '10.10.10.20' ],
+	port => 5405,
+	ringnumber => 0,
+	network_address => '10.10.10.0',
+}
+
+corosync::interface{'heartbeat':
+	member => [ '10.20.10.10', '10.20.10.20' ],
+	port => 5415,
+	ringnumber => 1,
+	network_address => '10.20.10.0',
+}
+

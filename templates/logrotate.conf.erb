@@ -1,0 +1,11 @@
+#File managed by puppet
+
+<%= scope.lookupvar('corosync::params::logfile') %> {
+	missingok
+	<%= scope.lookupvar('corosync::params::logfile_compress') %>
+	notifempty
+	daily
+	rotate <%= scope.lookupvar('corosync::params::logfile_ringsize') %>
+	copytruncate
+}
+

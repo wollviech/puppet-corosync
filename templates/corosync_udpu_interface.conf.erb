@@ -1,0 +1,15 @@
+
+	# Interface: <%= name %>
+	interface {
+
+		<% member.each do |item| %>
+		member {
+			memberaddr: <%= item %>
+		}<%end -%>
+
+		ringnumber: <%= ringnumber %>
+		bindnetaddr: <%= network_address %>
+		# Note: Uses port (recv) and port -1 (sends) !
+		mcastport: <%= port %>
+
+	}

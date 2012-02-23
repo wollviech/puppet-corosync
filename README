@@ -2,8 +2,10 @@
 
 = Description
 
-Configures Corosync, a part of the Pacemaker or Red Hat Cluster stacks. See corosync::corosync
-for main-class configuration
+Configures Corosync, a part of the Pacemaker or Red Hat Cluster stacks. 
+
+See corosync::corosync for main-class configuration
+See corosync::params for Path-Configuration
 
 = License
 
@@ -13,7 +15,24 @@ license. A full copy of the license terms can be found in the file LICENSE.
 By using, modifying or redistributing this work you agree to be bound by the 
 license terms. 
 
+= Requirements 
+
+This module requires the following modules:
+
+* A logwatch module that exports the config directory for logwatch in the variable
+  $logwatch::params::logrotate_d
+* The concat module
+
 = Example
+
+The following example will do a few things:
+
+1) It will install corosync for use with pacemaker 1.0 (ie: pacemaker will be started
+   by corosync)
+2) It will set rrp_mode to active
+3) It will activate secure authentication
+4) It will create two rings and corresponding firewallrules for them
+
 
 class {'corosync':
 	rrp_mode => 'active',

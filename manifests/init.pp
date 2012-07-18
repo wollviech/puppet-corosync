@@ -27,11 +27,17 @@
 #			mcast:: UDP Multicast
 #	bool $pacemaker (default: true):
 #		Whether to enable pacemaker integration
+#	bool $pacemaker_compat_mode(default: true):
+#		Whether compatibility mode for version 1.0 of pacemaker should be enabled or not.
+#		In compatibility mode, corosync itself will start pacemaker, while in
+#		'non-legacy' mode pacemaker must be started by its own init script
 #	enum $secauth [on|off] (default: off):
 #		Whether to enable symmetric encryption for message passing.
 #		*Warning*: You *must* set an encryption key via $secauth_key if you enable encryption
 #	string $secauth_key (default: undef):
 #		Base64-encoded symmetric encryption key
+#	bool $start_at_boot (default: true):
+#		Whether to start corosync at boot-time
 #
 # Dependencies:
 #	- logrotate
@@ -54,8 +60,10 @@ class corosync (
 	$rrp_mode = 'passive',
 	$transport_mode = 'udpu',
 	$pacemaker = true,
+	$pacemaker_compat_mode = true,
 	$secauth = 'off',
-	$secauth_key = undef
+	$secauth_key = undef,
+	$start_at_boot = true,
 ){
 
 	require corosync::params
@@ -128,7 +136,7 @@ class corosync (
 
 	# Ensure that the service is startet at boot time
 	service{$corosync::params::servicename:
-		enable => true,
+		enable => $start_at_boot,
 		ensure => undef,
 		require => [
 				Package[$corosync::params::packagename], 
@@ -138,11 +146,16 @@ class corosync (
 
 
 	if $pacemaker {
+		$corosync_pacemaker_versioncode = $pacemaker_compat_mode ? {
+			true	=>	"0",
+			false	=>	"1",
+		}
 		file {"${corosync::params::servicedir}/pacemaker":
 			ensure => file,
-			source => 'puppet:///modules/corosync/etc_corosync_service.d_pacemaker',
+	#		source => 'puppet:///modules/corosync/etc_corosync_service.d_pacemaker',
 			checksum => md5,
 			require => Package[$corosync::params::packagename],
+			content => template('corosync/etc_corosync_service.d_pacemaker.erb')
 		}
 
 		File["${corosync::params::servicedir}/pacemaker"] -> Service[$corosync::params::servicename]

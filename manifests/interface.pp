@@ -18,10 +18,7 @@
 #
 # Usage examples:
 #     corosync::interface{'heartbeat':
-#       member => [
-#               $nodeconfig::siskofrisko::ips::sisko['heartbeat'],
-#               $nodeconfig::siskofrisko::ips::frisko['heartbeat'],
-#           ],
+#       member => [ '192.168.9.33', '192.168.9.34' ],
 #       port => 5405,
 #       ringnumber => 0,
 #       network_address => '192.168.9.32',

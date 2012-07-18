@@ -3,6 +3,8 @@
 
 <% member.each do |item| %>
 -A SERVICE-Specific-1-INPUT -m state --state NEW -m udp -p udp --dport <%= port_1 %>:<%= port %> -s <%= item %> -j ACCEPT
+-A SERVICE-Specific-1-INPUT -p tcp  --dport 21064 -s <%= item %> -j ACCEPT
+-A SERVICE-Specific-1-INPUT -p sctp --dport 21064 -s <%= item %> -j ACCEPT
 
 <%end -%>
 
